@@ -27,7 +27,7 @@ namespace Api.Controllers
         }
 
         // POST api/example
-        [HttpPost("register")]
+        [HttpPut("register")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest userInfo)
         {
             if (!ModelState.IsValid)
