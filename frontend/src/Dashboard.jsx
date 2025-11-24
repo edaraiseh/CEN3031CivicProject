@@ -1,17 +1,22 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-// import { PetitionsPage } from './pages/PetitionsPage.jsx';
-// import { CalendarPage } from './pages/CalendarPage.jsx';
+import PetitionsPage from './pages/PetitionsPage';
+import CalendarPage from './pages/CalendarPage';
 import './Dashboard.css';
 
 function Dashboard() {
-    const [currentComponent, setCurrentComponent] = useState(/*<PetitionsPage/>*/); // this will hold the current element to display in main-content. 
+    const [currentComponent, setCurrentComponent] = useState(<PetitionsPage/>); // this will hold the current element to display in main-content. 
                                                                                 // default for now is PetitionsPage, will eventually be OfficialAnnouncements
     const [currentMenuItem, setCurrentMenuItem] = useState(''); // this is just the currently selected menu item. Change in this item will cause
                                                               // change in currentComponent within useEffect
     const state = useLocation().state ? useLocation().state : null;
-    const currentUser = state ? state.currentUser : null;
+    console.log(`useLocation returns ${useLocation()}`)
+    console.log(`state is ${state}`);
+    console.log(`state.user is ${state.user}`);
+    const currentUser = state ? state.user : null;
+
+    console.log(`current user is ${currentUser}`);
 
     useEffect(() => {
         if(currentMenuItem === 'official-announcements') {
@@ -19,9 +24,9 @@ function Dashboard() {
         } else if(currentMenuItem === 'community-board') {
             // set currentComponent to CommunityBoard
         } else if(currentMenuItem === 'petitions') {
-            // setCurrentComponent(<PetitionsPage/>);
+            setCurrentComponent(<PetitionsPage/>);
         } else if(currentMenuItem === 'calendar') {
-            // setCurrentComponent(<CalendarPage/>);
+            setCurrentComponent(<CalendarPage/>);
         }
         console.log(`Current menu item is ${currentMenuItem}`);
     }, [currentMenuItem]); // change in currentMenuItem causes useEffect to be run

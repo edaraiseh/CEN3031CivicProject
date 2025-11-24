@@ -80,3 +80,4 @@ workflows:
       - setup-db-run-tests:
           requires:
             - webapi-setup
+      - say-hello

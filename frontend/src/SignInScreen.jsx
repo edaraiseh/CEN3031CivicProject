@@ -9,10 +9,11 @@ function SignInScreen() {
     const [baseUrl, setBaseUrl] = useState('');
     const [error, setError] = useState('');
     const [signingIn, setSigningIn] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
+    let currentUser = '';
     const navigate = useNavigate();
 
     const signInUser = async(e) => {
+        console.log(`current user originally ${currentUser}`);
         e.preventDefault();
         let userAuthenticated = false;
 
@@ -42,17 +43,19 @@ function SignInScreen() {
                     'password': password
                 })
             });
->>>>>>>>> Temporary merge branch 2
             if(!response.ok) {
                 throw new Error('Failed to sign in user.');
             }
             if(response.ok) {
                 userAuthenticated = true;
-                console.log(response);
-                currentUser = response.body;
+                const json = await response.json();
+                console.log(`json is ${json}`);
+                currentUser = json;
+                console.log(`current user is ${currentUser}`);
             }
         } catch(e) {
             setError(e.message);
+            console.log(e.message);
             alert('Failed to sign in. Please check that your username and password are correct.');
             return;
         } finally {
@@ -60,6 +63,7 @@ function SignInScreen() {
         }
 
         if(userAuthenticated) {
+            console.log(`patching through to dashboard, currentUser is ${currentUser}`);
             navigate('/dashboard', {state: {user: currentUser}});
         }
     }

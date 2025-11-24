@@ -1,15 +1,14 @@
-import { useMemo, useState } from 'react';
-import PetitionCard from '../components/PetitionCard';
-import CreatePetitionForm from '../components/CreatePetitionForm';
-import './PetitionsPage.css';
+import { useMemo, useEffect, useState } from 'react';
+import PetitionCard from '../components/PetitionCard.jsx';
+import CreatePetitionForm from '../components/CreatePetitionForm.jsx';
+import './Petitions.css';
 
 
 // TODO: uncomment when you integrate!! 
-//import { useEffect, useMemo, useState } from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 
 // TODO: When integrating backend, create a .env file in the project root:
-// VITE_API_BASE_URL=https://localhost:7060/api
+const VITE_API_BASE_URL='http://localhost:5272/api';
 
 export default function PetitionsPage() {
   // MOCK DATA: replace later with backend fetch
@@ -18,20 +17,20 @@ export default function PetitionsPage() {
   const [showForm, setShowForm] = useState(false);
 
   // TODO(back end): load data 
-  // useEffect(() => {
-  //   axios.get('/api/petitions').then(res => setPetitions(res.data));
-  // }, []);
+  useEffect(() => {
+    axios.get('/api/petitions').then(res => setPetitions(res.data));
+  }, []);
 
    // TODO:  uncomment when you integrate:
   // BACKEND INTEGRATION (LOAD PETITIONS)
-  /*
+  
 useEffect(() => {
   axios
     .get(`${import.meta.env.VITE_API_BASE_URL}/petitions`)
     .then(res => setPetitions(res.data))
     .catch(err => console.error('Failed to load petitions:', err));
 }, []);
-  */
+  
 
 
   function handleCreate({ title, description }) {
@@ -49,7 +48,7 @@ useEffect(() => {
 
   // TODO: when integrating uncomment these & delete handleCreate^^
 
-  /* 
+  
 // BACKEND INTEGRATION (CREATE PETITION)
 async function handleCreate({ title, description }) {
   try {
@@ -64,7 +63,7 @@ async function handleCreate({ title, description }) {
     console.error('Failed to create petition:', err);
   }
 }
-*/
+
 
   function handleSign(id) {
     // TODO(back end): POST /api/petitions/{id}/sign
@@ -75,7 +74,7 @@ async function handleCreate({ title, description }) {
 
   // TODO: when integrating delete handleSign and uncomment this:
 
-  /* 
+  
 // BACKEND INTEGRATION (SIGN PETITION)
 async function handleSign(id) {
   try {
@@ -89,7 +88,7 @@ async function handleSign(id) {
     console.error('Failed to sign petition:', err);
   }
 }
-*/
+
 
   const sorted = useMemo(() => {
     const list = [...petitions];

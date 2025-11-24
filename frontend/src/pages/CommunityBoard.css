@@ -1,0 +1,82 @@
+.community-board-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 16px 80px;
+    text-align: center;
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.community-board-page h1 {
+    font-size: 40px;
+    margin-bottom: 16px;
+    color: #333;
+}
+.community-board-page h1::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: #0d87df;
+    margin: 10px auto 20px auto;
+    border-radius: 4px;
+}
+
+.community-board-page > p {
+    max-width: 600px;
+    margin: 0 auto 32px auto;
+    color: #555;
+    font-size: 16px;
+}
+
+.community-posts {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.community-post-card {
+    border-radius: 15px;
+    box-shadow: 0px 0px 5px 2px rgb(199, 199, 199);
+    background-color: white;
+    padding: 24px 32px;
+    max-width: 600px;
+    width: 80vw;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.community-post-card h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.community-post-card p {
+    margin: 6px 0;
+    color: #555;
+    line-height: 1.4;
+}
+
+.community-post-meta {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #777;
+}
+
+/* Mobile tweak */
+@media (max-width: 768px) {
+    .community-post-card {
+        width: 90vw;
+        padding: 20px;
+    }
+
+    .community-board-page h1 {
+        font-size: 32px;
+    }
+}
