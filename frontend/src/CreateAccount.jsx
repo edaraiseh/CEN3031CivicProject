@@ -9,7 +9,7 @@ function CreateAccount() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [baseUrl, setBaseUrl] = useState('');
+  const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
   const [error, setError] = useState('');
   const [addingUser, setAddingUser] = useState(false);
   const navigate = useNavigate();

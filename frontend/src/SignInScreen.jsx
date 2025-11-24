@@ -6,7 +6,7 @@ import './SignInScreen.css';
 function SignInScreen() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [baseUrl, setBaseUrl] = useState('');
+    const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
     const [error, setError] = useState('');
     const [signingIn, setSigningIn] = useState(false);
     let currentUser = '';

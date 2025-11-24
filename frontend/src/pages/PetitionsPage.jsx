@@ -7,8 +7,6 @@ import './Petitions.css';
 // TODO: uncomment when you integrate!! 
 import axios from 'axios';
 
-// TODO: When integrating backend, create a .env file in the project root:
-const VITE_API_BASE_URL='http://localhost:5272/api';
 
 export default function PetitionsPage() {
   // MOCK DATA: replace later with backend fetch
