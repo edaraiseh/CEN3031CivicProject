@@ -20,9 +20,6 @@ function App() {
         <Route path='/sign-in' element={<SignInScreen/>}/>
         <Route path='/create-account' element={<CreateAccount/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
-
-        <Route path='/announcements' element={<Announcements />} />
-        <Route path='/community-board' element={<CommunityBoard />} />
         <Route path='*' element={<Navigate to='/' replace/>}/> 
       </Routes>
     </div>
