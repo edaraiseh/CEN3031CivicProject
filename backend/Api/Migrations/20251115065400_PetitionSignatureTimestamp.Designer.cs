@@ -3,6 +3,7 @@ using System;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(TVDbContext))]
-    partial class TVDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251115065400_PetitionSignatureTimestamp")]
+    partial class PetitionSignatureTimestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,12 +310,6 @@ namespace Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("email");
 
-                    b.Property<bool>("IsOfficial")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("isofficial");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
@@ -427,11 +424,6 @@ namespace Api.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasColumnName("status");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("title");
 
                     b.ToTable("petitions");
                 });

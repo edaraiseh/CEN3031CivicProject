@@ -75,7 +75,6 @@ namespace Api.Services
                 .SingleOrDefaultAsync(u => u.Username == userInfo.Username);
             if (user == null)
             {
-                Console.WriteLine(userInfo.Username);
                 return null;
             }
 

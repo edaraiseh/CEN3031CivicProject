@@ -35,14 +35,36 @@ namespace Api.Controllers
                 page, pageSize,
                 sortBy, sortOrder,
                 userId,
-                search
+                search,
+                false
+            );
+            var result = ServiceHelper.HandleReturnCode(returnCode);
+            if (result is not OkResult) { return result; }
+            return Ok(posts);
+        }
+        [HttpGet("official")]
+        public async Task<IActionResult> GetOfficialPosts(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortBy = "createdat",
+            [FromQuery] string sortOrder = "desc",
+            [FromQuery] int? userId = null,
+            [FromQuery] string? search = null
+        )
+        {
+            var (returnCode, posts) = await _postsService.GetPostsAsync(
+                page, pageSize,
+                sortBy, sortOrder,
+                userId,
+                search,
+                true
             );
             var result = ServiceHelper.HandleReturnCode(returnCode);
             if (result is not OkResult) { return result; }
             return Ok(posts);
         }
 
-        [HttpPut("create")]
+        [HttpPut]
         [Authorize]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDTO post)
         {
@@ -58,8 +80,24 @@ namespace Api.Controllers
             if (result is not OkResult) { return result; }
             return Ok(createdPost);
         }
+        [HttpPut("official")]
+        [Authorize]
+        public async Task<IActionResult> CreateOfficialPost([FromBody] CreatePostDTO post)
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdStr == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdStr);
 
-        [HttpPost("{postId}/delete")]
+            var (returnCode, createdPost) = await _postsService.CreateOfficialPostAsync(userId, post.Content);
+            var result = ServiceHelper.HandleReturnCode(returnCode);
+            if (result is not OkResult) { return result; }
+            return Ok(createdPost);
+        }
+
+        [HttpDelete("{postId}")]
         [Authorize]
         public async Task<IActionResult> DeletePost(int postId)
         {
@@ -76,7 +114,7 @@ namespace Api.Controllers
             return Ok(deletedPost);
         }
 
-        [HttpPost("{postId}/update")]
+        [HttpPost("{postId}")]
         [Authorize]
         public async Task<IActionResult> UpdatePost(int postId, [FromBody] UpdatePostDTO post)
         {

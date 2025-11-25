@@ -57,6 +57,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PostsService>();
+builder.Services.AddScoped<PetitionsService>();
 builder.Services.AddScoped(sp =>
     sp.GetRequiredService<IOptions<JwtSettings>>().Value);
 builder.Services.AddScoped<JwtService>();

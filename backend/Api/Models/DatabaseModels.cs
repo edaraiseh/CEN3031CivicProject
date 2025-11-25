@@ -7,7 +7,8 @@ namespace Api.Models
         public int Id { get; set; }
         public required string Username { get; set; }
         public required string Email { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public bool IsOfficial { get; set; } // default value `false` enforced at database level 
+        public DateTime CreatedAt { get; set; } // defualt value `CURRENT_TIMESTAMP` enforced at database level
 
         public required UserAuth Auth { get; set; }
         public required UserProfile Profile { get; set; }
@@ -80,6 +81,7 @@ namespace Api.Models
     public class Petition : Post
     {
         public int SignatureCount { get; set; }
+        public required string Title { get; set; }
         public PetitionStatus Status { get; set; }
 
         public List<PetitionSignature> Signatures { get; set; } = new();  
@@ -88,9 +90,10 @@ namespace Api.Models
     {
         public required int PetitionId { get; set; }
         public required int UserId { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public required Petition Petition{ get; set; }
-        public required User User { get; set; }
+        public Petition? Petition{ get; set; }
+        public User? User { get; set; }
     }
     public class Message
     {

@@ -13,10 +13,10 @@ namespace Api.Models
     public class PostDTO
     {
         public int Id { get; set; }
+        public required string Author { get; set; }
         public string? Content { get; set; }
         public required DateTime CreatedAt { get; set; }
         public required DateTime? UpdatedAt { get; set; }
-        public required string Author { get; set; }
         public required List<PostReaction> Reactions { get; set; }
     }
     public class CreatePostDTO

@@ -29,7 +29,8 @@ namespace Api.Services
             string sortBy,
             string sortOrder,
             int? userId,
-            string? search
+            string? search,
+            bool official
         )
         {
             if (page <= 0 || pageSize <= 0) { return (ServiceReturnCode.InvalidInput, null); }
@@ -50,8 +51,9 @@ namespace Api.Services
                 : query.OrderBy(sortBy + " descending");
             query = query
                 .Where(p => !p.IsDeleted)
-                .Where(p => !p.IsOfficial)
-                .Where(p => p.ParentId == null);
+                .Where(p => p.IsOfficial == official)
+                .Where(p => p.ParentId == null)
+                .Where(po => !_context.Petitions.Any(pe => pe.Id == po.Id));
             var totalItems = await query.CountAsync();
             var posts = await query
                 .Skip((page - 1) * pageSize)
@@ -83,6 +85,30 @@ namespace Api.Services
                 UserId = userId,
                 Content = content,
                 CreatedAt = DateTime.UtcNow,
+            };
+            var createdPost = await _context.AddAsync(post);
+            if (createdPost == null) { return (ServiceReturnCode.InternalError,null); }
+            await _context.SaveChangesAsync();
+            return (ServiceReturnCode.Success,new CreatePostDTO
+            {
+                Id = post.Id,
+                Content = post.Content,
+            });
+        }
+        public async Task<(ServiceReturnCode, CreatePostDTO?)> CreateOfficialPostAsync(int userId, string content)
+        {
+            if (String.IsNullOrEmpty(content)) { return (ServiceReturnCode.InvalidInput,null); }
+            var user = await _context.Users
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync();
+            if (user == null) { return (ServiceReturnCode.InternalError,null); }
+            if (!user.IsOfficial) { return (ServiceReturnCode.Unauthorized,null); }
+            var post = new Post
+            {
+                UserId = userId,
+                Content = content,
+                CreatedAt = DateTime.UtcNow,
+                IsOfficial = true
             };
             var createdPost = await _context.AddAsync(post);
             if (createdPost == null) { return (ServiceReturnCode.InternalError,null); }

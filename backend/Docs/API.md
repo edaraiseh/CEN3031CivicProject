@@ -76,7 +76,7 @@ will be set to null if left blank.
 401 Unauthorized
 
 ## User Posts
-### GET `/posts/`
+### GET `/posts`
 **Description:** Get a selection of top level posts based on a query, optionally sorted.
 
 **Parameters:**
@@ -96,11 +96,11 @@ will be set to null if left blank.
     "totalItems": 1,
     "page": 1,
     "pageSize": 10,
-    "totalPages": 1
+    "totalPages": 1,
     "posts": [
         {
-            "id": 1
-            "userId": 2,
+            "id": 1,
+            "author": "authory jones",
             "content": "Example post",
             "createdAt": "2025-10-29T05:21:58.121288Z",
             "updatedAt": null,
@@ -111,21 +111,13 @@ will be set to null if left blank.
 ```
 400 Bad Request
 
-### PUT `/posts/create`
+### PUT `/posts`
 **Description:** Create a post, requires a valid JWT.
 
 **Request Body (JSON):**
 ```json
 {
-    "id": 1
-    "userId": 1,
     "content": "This is an example post!"
-    "createdAt": "2025-10-30T04:11:38.506352Z",
-    "updatedAt": null,
-    "isOfficial": false,
-    "isDeleted": false,
-    "author": null,
-    "reactions": []
 }
 ```
 
@@ -141,7 +133,7 @@ will be set to null if left blank.
 401 Unauthorized
 409 Conflict
 
-### POST `/posts/{postId}/delete`
+### DELETE `/posts/{postId}`
 **Description:** Delete a post, requires a valid JWT and a valid target. If a post is a "top-level" post, ie it has no parent, then all child posts are recursively deleted in the entire hierarchy.
 
 
@@ -155,7 +147,7 @@ will be set to null if left blank.
 401 Unauthorized
 404 Not Found
 
-### POST `/posts/{postId}/update`
+### POST `/posts/{postId}`
 **Description:** Update the contents of a post, requires a valid JWT and a valid target.
 
 **Request Body (JSON):**
@@ -176,7 +168,7 @@ will be set to null if left blank.
 401 Unauthorized
 404 Not Found
 
-### POST `/posts/{postId}/replies`
+### PUT `/posts/{postId}/replies`
 **Description:** Create a reply to an existing post or reply, requires a valid JWT and a valid target.
 
 **Request Body (JSON):**
@@ -234,7 +226,7 @@ will be set to null if left blank.
 ```
 404 Not Found
 
-### POST `/posts/{postId}/reactions`
+### PUT `/posts/{postId}/reactions`
 **Description:** Create a reaction to a specified post, requires a valid target and a valid JWT. 
 
 **Request Body (JSON):**
@@ -273,6 +265,210 @@ Note that type is a stringly-typed enum, valid values are: `like`, `dislike`, `h
 {
     "postid": 1,
     "type": "like"
+}
+```
+404 Not Found
+## Official Posts
+Official posts are just a special type of post, most of their operations use the default post routes. The only different routes are shown below:
+
+### GET `/posts/official`
+**Description:** Get a selection of official posts based on a query, optionally sorted.
+
+**Parameters:**
+|Name     |Type  |Required|Example    |Valid Values                                   |Default    |Description                                                                    |
+|:--------|:-----|:-------|:----------|:----------------------------------------------|:----------|:------------------------------------------------------------------------------|
+|page     |int   |true    |1          |page > 0                                       |1          |Group posts into groups of pageSize size and return the group with index `page`|
+|pageSize |int   |true    |10         |pageSize > 0                                   |10         |Determine the size of group for grouping posts into pages                      |
+|sortBy   |string|true    |"createdat"|"id","userid","content","createdat","updatedat"|"createdat"|Parameter to sort queried posts by                                             |
+|sortOrder|string|true    |"desc"     |"asc","desc"                                   |"desc"     |Order to sort posts in                                                         |
+|userId   |int   |false   |1          |userId >= 0                                    |null       |Optional parameter to limit posts to posts made by user with id `userid`       |
+|search   |string|false   |"findthis" |any string                                     |null       |Optional parameter to limit posts to posts containing the string `search`      |
+
+**Responses:**
+200 Ok
+```json
+{
+    "totalItems": 1,
+    "page": 1,
+    "pageSize": 10,
+    "totalPages": 1,
+    "posts": [
+        {
+            "id": 1,
+            "content": "Example post",
+            "createdAt": "2025-10-29T05:21:58.121288Z",
+            "updatedAt": null,
+            "reactions": [] 
+        }
+    ]
+}
+```
+400 Bad Request
+
+### PUT `/posts/official`
+**Description:** Create an official post, requires a valid JWT and that the user account backed by the JWT is an official user.
+
+**Request Body (JSON):**
+```json
+{
+    "content": "This is an example post!"
+}
+```
+
+**Responses:**
+200 Ok
+```json
+{
+    "id": 1,
+    "content": "This is an example post!"
+}
+```
+400 BadRequest
+401 Unauthorized
+409 Conflict
+
+
+## Petitions
+### GET `/petitions`
+**Description:** Get a selection of petitions based on a query, optionally sorted.
+
+**Parameters:**
+|Name     |Type  |Required|Example    |Valid Values                                   |Default    |Description                                                                    |
+|:--------|:-----|:-------|:----------|:----------------------------------------------|:----------|:------------------------------------------------------------------------------|
+|page     |int   |true    |1          |page > 0                                       |1          |Group posts into groups of pageSize size and return the group with index `page`|
+|pageSize |int   |true    |10         |pageSize > 0                                   |10         |Determine the size of group for grouping posts into pages                      |
+|sortBy   |string|true    |"createdat"|"id","userid","content","createdat","updatedat"|"createdat"|Parameter to sort queried posts by                                             |
+|sortOrder|string|true    |"desc"     |"asc","desc"                                   |"desc"     |Order to sort posts in                                                         |
+|userId   |int   |false   |1          |userId >= 0                                    |null       |Optional parameter to limit posts to posts made by user with id `userid`       |
+|search   |string|false   |"findthis" |any string                                     |null       |Optional parameter to limit posts to posts containing the string `search`      |
+
+**Responses:**
+200 Ok
+```json
+{
+    "totalItems": 1,
+    "page": 1,
+    "pageSize": 10,
+    "totalPages": 1,
+    "petitions": [
+        {
+            "id": 1,
+            "title": "Example Petition",
+            "content": "This is an example petition",
+            "createdAt": "2025-10-29T05:21:58.121288Z",
+            "updatedAt": null,
+            "signaturecount": 0,
+            "author": "authory jones",
+        }
+    ]
+}
+```
+400 Bad Request
+
+### PUT `/petitions`
+**Description:** Create a petition, requires a valid JWT.
+
+**Request Body (JSON):**
+```json
+{
+    "title": "Example Petition",
+    "content": "This is an example petition!"
+}
+```
+
+**Responses:**
+200 Ok
+```json
+{
+    "id": 1,
+    "title": "Example Petition",
+    "content": "This is an example petition!"
+}
+```
+400 BadRequest
+401 Unauthorized
+409 Conflict
+
+### DELETE `/petitions/{petitionId}`
+**Description:** Marks a petition as failed, requires a valid JWT and a valid target. 
+
+
+**Responses:**
+200 Ok
+```json
+{
+    "id": 1
+}
+```
+401 Unauthorized
+404 Not Found
+
+### PUT `/petitions/{petitionId}/replies`
+**Description:** Create a reply to an existing petition(NOT a petition reply), requires a valid JWT and a valid target.
+
+**Request Body (JSON):**
+```json
+{
+    "content": "This a reply to a petition."
+}
+```
+
+**Responses:**
+200 Ok
+```json
+{
+    "id": 2,
+    "content": "This a reply to another post."
+}
+```
+401 Unauthorized
+404 Not Found
+
+### GET `/petitions/{petitionId}/replies`
+**Description:** Get all replies to a given petition, requires a valid target. Deleted replies are also returned, but their contents are set to `null`.
+
+**Responses:**
+200 Ok
+```json
+{
+    [
+        {
+            "id": 2,
+            "content": "This a reply to a petition."
+        },
+        {
+            "id": 3,
+            "content": "This is also a reply to the same petition."
+        }
+    ]
+}
+```
+400 Bad Request
+404 Not Found
+
+### PUT `/petitions/{petitionId}/sign`
+**Description:** Signs a petition. Requires a valid target, a JWT, and that the user account denoted by the JWT has not already signed the petition. 
+
+**Responses:**
+200 Ok
+```json
+{
+    "petitionid": 1,
+    "userid": 2
+}
+```
+404 Not Found
+409 Conflict
+
+### DELETE `/petitions/{petitionId}/sign`
+**Description:** Deletes a petition signature. Requires a valid target, a JWT, and that the user account denoted by the JWT has signed the petition. 
+
+**Responses:**
+200 Ok
+```json
+{
+    "petitionid": 1,
+    "userid": 2
 }
 ```
 404 Not Found

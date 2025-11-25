@@ -52,6 +52,9 @@ namespace Api.Data
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
             modelBuilder.Entity<User>()
+                .Property(u => u.IsOfficial)
+                .HasDefaultValue(false);
+            modelBuilder.Entity<User>()
                 .Property(u => u.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
@@ -216,6 +219,9 @@ namespace Api.Data
         {
             modelBuilder.Entity<PetitionSignature>()
                 .HasKey(ps => new { ps.UserId, ps.PetitionId } );
+            modelBuilder.Entity<PetitionSignature>()
+                .Property(pr => pr.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             modelBuilder.Entity<PetitionSignature>()
                 .HasOne(ps => ps.User)
                 .WithMany(u => u.SignedPetitions)
