@@ -62,4 +62,14 @@
     .link:hover {
         color: #0966a8;
     }
+
+    #sign-out-btn {
+        background-color: #0d87df;
+        width: 200px;
+        color: white;
+    }
+
+    #sign-out-btn:hover {
+        background-color: #0966a8;
+    }
 }
