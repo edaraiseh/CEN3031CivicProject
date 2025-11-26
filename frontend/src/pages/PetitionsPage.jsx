@@ -127,7 +127,7 @@ async function handleSign(id) {
         <ul className="list">
           {sorted.map(p => (
             <li key={p.id} className="card card-accent">
-              <PetitionCard petition={p} onSign={() => handleSign(p.id)} />
+              <PetitionCard key={p.id} petition={p} onSign={() => handleSign(p.id)} />
             </li>
           ))}
         </ul>
