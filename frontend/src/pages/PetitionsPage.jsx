@@ -67,7 +67,7 @@ async function handleSign(id) {
 
 
   const sorted = useMemo(() => {
-    const list = [...petitions];
+    const list = Array.from(petitions);
     if (sortBy === 'popular') {
       list.sort((a, b) => b.signatures - a.signatures || new Date(b.createdAt) - new Date(a.createdAt));
     } else {
