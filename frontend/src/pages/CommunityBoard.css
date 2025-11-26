@@ -1,10 +1,11 @@
 .community-board-page {
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     min-width: 100vw;
-    min-height: 100vh;
+    min-height: 100%;
     margin: 0;
     padding: 40px 16px 80px;
     text-align: center;
@@ -40,33 +41,10 @@
     justify-content: center;
 }
 
-.community-post-card {
-    border-radius: 15px;
-    box-shadow: 0px 0px 5px 2px rgb(199, 199, 199);
-    background-color: white;
-    padding: 24px 32px;
-    max-width: 600px;
-    width: 80vw;
-    margin-bottom: 24px;
-    text-align: left;
-}
-
-.community-post-card h2 {
-    font-size: 22px;
-    margin-bottom: 8px;
-    color: #333;
-}
-
-.community-post-card p {
-    margin: 6px 0;
-    color: #555;
-    line-height: 1.4;
-}
-
-.community-post-meta {
-    margin-top: 16px;
-    font-size: 14px;
-    color: #777;
+.create-button {
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
 
 /* Mobile tweak */

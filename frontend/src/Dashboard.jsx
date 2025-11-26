@@ -25,7 +25,7 @@ function Dashboard() {
         if(currentMenuItem === 'official-announcements') {
             setCurrentComponent(<Announcements/>)
         } else if(currentMenuItem === 'community-board') {
-            setCurrentComponent(<CommunityBoard/>)
+            setCurrentComponent(<CommunityBoard user={currentUser}/>)
         } else if(currentMenuItem === 'petitions') {
             setCurrentComponent(<PetitionsPage/>);
         } else if(currentMenuItem === 'calendar') {
