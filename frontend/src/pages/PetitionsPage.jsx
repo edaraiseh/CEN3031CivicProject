@@ -16,39 +16,26 @@ export default function PetitionsPage() {
 
   // TODO(back end): load data 
   useEffect(() => {
-    axios.get('/api/petitions').then(res => setPetitions(res.data));
+    console.log(`petitions is ${petitions}`);
+    //axios.get('/api/petitions').then(res => setPetitions(res.data));
+    console.log(`petitions is ${petitions}`);
   }, []);
 
-   // TODO:  uncomment when you integrate:
   // BACKEND INTEGRATION (LOAD PETITIONS)
   
 useEffect(() => {
+  console.log(`petitions is ${petitions}`);
   axios
     .get(`${import.meta.env.VITE_API_BASE_URL}/petitions`)
     .then(res => setPetitions(res.data))
     .catch(err => console.error('Failed to load petitions:', err));
+    console.log(`petitions is ${petitions}`);
 }, []);
-  
-
-
-  function handleCreate({ title, description }) {
-    // TODO(back end): POST /api/petitions
-    const newPetition = {
-      id: crypto.randomUUID(),               // backend will send real id
-      title: title.trim(),
-      description: description.trim(),
-      createdAt: new Date().toISOString(),   // backend will set server time
-      signatures: 0
-    };
-    setPetitions(prev => [newPetition, ...prev]);
-    setShowForm(false);
-  }
-
-  // TODO: when integrating uncomment these & delete handleCreate^^
 
   
 // BACKEND INTEGRATION (CREATE PETITION)
 async function handleCreate({ title, description }) {
+  console.log(`petitions is ${petitions}`);
   try {
     const { data } = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/petitions`,
@@ -60,17 +47,8 @@ async function handleCreate({ title, description }) {
   } catch (err) {
     console.error('Failed to create petition:', err);
   }
+  console.log(`petitions is ${petitions}`);
 }
-
-
-  function handleSign(id) {
-    // TODO(back end): POST /api/petitions/{id}/sign
-    setPetitions(prev =>
-      prev.map(p => p.id === id ? { ...p, signatures: p.signatures + 1 } : p)
-    );
-  }
-
-  // TODO: when integrating delete handleSign and uncomment this:
 
   
 // BACKEND INTEGRATION (SIGN PETITION)
@@ -95,6 +73,7 @@ async function handleSign(id) {
     } else {
       list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
+    console.log(`petitions is ${petitions}`);
     return list;
   }, [petitions, sortBy]);
 
