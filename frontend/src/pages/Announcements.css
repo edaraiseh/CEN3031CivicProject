@@ -4,7 +4,7 @@
     justify-content: flex-start;
     align-items: center;
     min-width: 100vw;
-    min-height: 100vh;
+    min-height: 100%;
     margin: 0;
     padding: 40px 16px 80px;
     text-align: center;

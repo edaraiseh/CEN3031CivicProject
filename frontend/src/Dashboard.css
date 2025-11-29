@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-width: 100vw;
+    min-width: 90vw;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -14,8 +14,8 @@
     .main-content {
         display: flex;
         flex-flow: column;
-        height: 100%;
         min-width: 100vw;
+        margin-bottom: 80px;
     }
 
     .bottom-menu {
@@ -30,6 +30,7 @@
         margin-bottom: 0px auto;
         position: fixed;
         bottom: 0;
+        height: 80px;
     }
     
     .bottom-menu li {

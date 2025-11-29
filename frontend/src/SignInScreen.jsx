@@ -51,7 +51,7 @@ function SignInScreen() {
                 const json = await response.json();
                 console.log(`json is ${json}`);
                 currentUser = json;
-                console.log(`current user is ${currentUser}`);
+                console.log(currentUser);
             }
         } catch(e) {
             setError(e.message);

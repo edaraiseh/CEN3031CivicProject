@@ -7,7 +7,7 @@ function Announcements() {
     <div className="announcements-page">
       <h1>Official Announcements</h1>
       <p>
-        This page will show official updates from the city / organization.
+        View official updates from your government officials.
       </p>
 
       <section className="announcements-list">
