@@ -8,18 +8,18 @@ import CommunityBoard from './pages/CommunityBoard.jsx';
 import './Dashboard.css';
 
 function Dashboard() {
-    const [currentComponent, setCurrentComponent] = useState(<PetitionsPage/>); // this will hold the current element to display in main-content. 
+    const [currentComponent, setCurrentComponent] = useState(); // this will hold the current element to display in main-content. 
                                                                                 // default for now is PetitionsPage, will eventually be OfficialAnnouncements
-    const [currentMenuItem, setCurrentMenuItem] = useState(''); // this is just the currently selected menu item. Change in this item will cause
+    const [currentMenuItem, setCurrentMenuItem] = useState('community-board'); // this is just the currently selected menu item. Change in this item will cause
                                                               // change in currentComponent within useEffect
     const state = useLocation().state ? useLocation().state : null;
     const navigate = useNavigate();
+    let currentUser = state ? state.user : null;
     console.log(`useLocation returns ${useLocation()}`)
     console.log(`state is ${state}`);
     console.log(`state.user is ${state.user}`);
-    let currentUser = state ? state.user : null;
 
-    console.log(`current user is ${currentUser}`);
+    console.log(currentUser);
 
     useEffect(() => {
         if(currentMenuItem === 'official-announcements') {

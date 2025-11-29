@@ -1,21 +1,24 @@
 // src/pages/CommunityBoard.jsx
 import { React, useState, useEffect } from "react";
 import Post from '../components/Post.jsx';
+import CreatePostForm from '../components/CreatePostForm.jsx';
 import "./CommunityBoard.css"; // also optional for now
 
 function CommunityBoard({ user }) { // user is passed in as a JSON object, no need to convert it to json
   const [currentUser, setCurrentUser] = useState(user);
+  const [currentUserName, setCurrentUserName] = useState('');
   const [posts, setPosts] = useState([]);
+  const [sortBy, setSortBy] = useState('recent'); // 'asc' | 'desc'
+  const [showForm, setShowForm] = useState(false);
   const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
 
-  const getPosts = async(searchTerm) => {  // if getting all posts, put null for searchTerm. Otherwise this function also doubles as a searching function
+  const getPosts = async() => {  // if getting all posts, put null for searchTerm. Otherwise this function also doubles as a searching function
+    console.log('shh...getPosts is starting');
     try {
       const response = await fetch(`${baseUrl}/posts?` + new URLSearchParams({
         page: 1,
         pageSize: 100,
-        sortBy: 'updatedat',
-        sortOrder: 'desc',
-        search: searchTerm
+        sortBy: 'createDat',
       }))
       .then((response) => response.json())
       .then((data) => {
@@ -44,20 +47,74 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
           "content": content
         })
       })
+      console.log(`response is ${response}`);
+      console.log(response);
     } catch(e) {
       throw new Error('Error creating post');
     } finally {
-      getPosts(null);
+      getPosts();
     }
   };
 
+  const getCurrentUserName = async() => {
+    try {
+      const response = await fetch(`${baseUrl}/users/${user.userId}`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      setCurrentUserName(response.json().username);
+      console.log(currentUserName);
+      console.log(`response is ${response}`);
+    } catch(e) {
+      throw new Error('Error getting current username');
+    }
+  }
+
+  const deletePost = async(postId) => {
+    try {
+      const response = await fetch(`${baseUrl}/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `bearer ${currentUser.token}`
+        }
+      })
+      console.log(`response is ${response}`);
+      console.log(response);
+    } catch(e) {
+      throw new Error('Error deleting post');
+    } finally {
+      getPosts();
+    }
+  }
+
   // Get current posts
   useEffect(() => {
-    getPosts(null);
-  }, []);
+    getPosts();
+  }, [sortBy]);
+
+  // Get current user's username
+  // useEffect(() => {
+  //   getCurrentUserName();
+  // })
   return (
     <div className="community-board-page">
-      <h1>Community Board</h1>
+      <div className="page-header">
+        <h1>Community Board</h1>
+        <div className="actions">
+          <button className="btn btn-accent" onClick={() => setShowForm(s => !s)}>
+            {showForm ? "Close" : "Create Post"}
+          </button>
+        </div>
+      </div>
+
+      {showForm && (<div className="card card-accent">
+          <CreatePostForm onSubmit={addPost} />
+        </div>
+      )}
+
       <p>
         Share posts, discussions, or local updates with your community.
       </p>
@@ -65,12 +122,10 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
       <section className="community-posts">
         {
           posts.map(post => (
-            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions}/>
+            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} currentUser={currentUser.token}/>
           ))
         }
       </section>
-         
-      <button className='create-button' onClick={() => addPost('Dog loose somewhere')}><img src='/assets/add.svg'/></button>
     </div>
   );
 }

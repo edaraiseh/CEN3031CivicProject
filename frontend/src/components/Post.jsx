@@ -1,7 +1,8 @@
 import React from "react";
+// import { ReactComponent as VerifiedSvg } from '../assets/verified.svg';
 import "./Post.css";
 
-function Post({author, content, createdAt, reactions}) {
+function Post({author, content, createdAt, reactions, onDelete, isOfficial}) {
   const formatDate = (iso) => {
     const d = new Date(iso);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -15,6 +16,7 @@ function Post({author, content, createdAt, reactions}) {
   return(
       <div className="post-card">
         <h2>{author}</h2>
+        <button className="delete-btn" onSubmit={onDelete}>Delete</button>
         <p>
           {content}
         </p>
