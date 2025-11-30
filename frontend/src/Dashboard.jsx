@@ -23,9 +23,9 @@ function Dashboard() {
 
     useEffect(() => {
         if(currentMenuItem === 'official-announcements') {
-            setCurrentComponent(<Announcements/>)
+            setCurrentComponent(<Announcements user={currentUser}/>);
         } else if(currentMenuItem === 'community-board') {
-            setCurrentComponent(<CommunityBoard user={currentUser}/>)
+            setCurrentComponent(<CommunityBoard user={currentUser}/>);
         } else if(currentMenuItem === 'petitions') {
             setCurrentComponent(<PetitionsPage/>);
         } else if(currentMenuItem === 'calendar') {

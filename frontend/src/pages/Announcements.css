@@ -1,5 +1,6 @@
 .announcements-page {
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -14,7 +15,7 @@
 
 .announcements-page h1 {
     font-size: 40px;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
     color: #333;
 }
 .announcements-page h1::after {
@@ -23,7 +24,7 @@
     width: 80px;
     height: 4px;
     background-color: #0d87df;
-    margin: 10px auto 20px auto;
+    margin: 10px auto 0px auto;
     border-radius: 4px;
 }
 
@@ -37,7 +38,12 @@
 .announcements-list {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+}
+
+.announcements-list post {
+    margin: 0 auto;
 }
 
 .announcement-card {
