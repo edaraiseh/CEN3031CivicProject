@@ -2,80 +2,124 @@ import { useMemo, useEffect, useState } from 'react';
 import PetitionCard from '../components/PetitionCard.jsx';
 import CreatePetitionForm from '../components/CreatePetitionForm.jsx';
 import './Petitions.css';
-
-
-// TODO: uncomment when you integrate!! 
 import axios from 'axios';
 
 
-export default function PetitionsPage() {
+export default function PetitionsPage({ user }) {
   // MOCK DATA: replace later with backend fetch
+  const [currentUser, setCurrentUser] = useState(user);
   const [petitions, setPetitions] = useState([]); 
   const [sortBy, setSortBy] = useState('recent'); // 'recent' | 'popular'
   const [showForm, setShowForm] = useState(false);
 
-  // TODO(back end): load data 
-  useEffect(() => {
-    console.log(`petitions is ${petitions}`);
-    //axios.get('/api/petitions').then(res => setPetitions(res.data));
-    console.log(`petitions is ${petitions}`);
-  }, []);
-
-  // BACKEND INTEGRATION (LOAD PETITIONS)
-  
-useEffect(() => {
-  console.log(`petitions is ${petitions}`);
+// BACKEND INTEGRATION (GET PETITIONS)
+const getPetitions = () => {
+  console.log(petitions);
   axios
-    .get(`${import.meta.env.VITE_API_BASE_URL}/petitions`)
-    .then(res => setPetitions(res.data))
+    .get(`${import.meta.env.VITE_API_BASE_URL}/petitions?` + new URLSearchParams({
+      page: 1,
+      pageSize: 100,
+      sortBy: 'createDat'
+    }))
+    .then(res => setPetitions(res.data.petitions))
     .catch(err => console.error('Failed to load petitions:', err));
-    console.log(`petitions is ${petitions}`);
+    console.log(petitions);
+}
+
+useEffect(() => {
+  getPetitions();
 }, []);
 
   
 // BACKEND INTEGRATION (CREATE PETITION)
 async function handleCreate({ title, description }) {
-  console.log(`petitions is ${petitions}`);
+  console.log(currentUser.token);
+  const config = {
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `bearer ${currentUser.token}`
+    }
+  }
+  console.log(petitions);
+  console.log(`user jwt ${currentUser.token}`);
   try {
-    const { data } = await axios.post(
+    const { data } = await axios.put(
       `${import.meta.env.VITE_API_BASE_URL}/petitions`,
-      { title, description }
+      { "title": title, "content": description }, 
+      config
     );
     // backend returns the new petition object
-    setPetitions(prev => [data, ...prev]);
+    getPetitions();
     setShowForm(false);
   } catch (err) {
     console.error('Failed to create petition:', err);
   }
-  console.log(`petitions is ${petitions}`);
+  console.log(petitions);
 }
 
   
 // BACKEND INTEGRATION (SIGN PETITION)
 async function handleSign(id) {
+  const config = {
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `bearer ${currentUser.token}`
+    }
+  }
   try {
-    await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/petitions/${id}/sign` 
+    await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/petitions/${id}/sign`,
+      {},
+      config
     );
-    //re-fetch all petitions if backend handles signature increment: assumes backend handles signatures!
-    // const { data } = await axios.get(`${import.meta.env.VITE_APP_API_BASE_URL}/petitions`);
-    // setPetitions(data);
+    getPetitions();
   } catch (err) {
+    if(err.response.status === 409) {
+        deletePetitionSign(id);
+        return;
+    }
     console.error('Failed to sign petition:', err);
   }
+}
+
+async function deletePetitionSign(id) {
+  const config = {
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `bearer ${currentUser.token}`
+    }
+  }
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}/petitions/${id}/sign`,
+      {},
+      config
+    )
+    .then(res => {
+      if(res.ok) {
+        alert('Petition unsigned sucessfully!');
+      }
+    })
+  } catch(err) {
+    console.error('Failed to delete petition signature:', err);
+  }
+  getPetitions();
 }
 
 
   const sorted = useMemo(() => {
     const list = Array.from(petitions);
+    console.log(list);
     if (sortBy === 'popular') {
       list.sort((a, b) => b.signatures - a.signatures || new Date(b.createdAt) - new Date(a.createdAt));
     } else {
       list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
-    console.log(`petitions is ${petitions}`);
+    console.log(petitions);
     return list;
   }, [petitions, sortBy]);
+
+  console.log(sorted);
 
   return (
     <main className="container">
