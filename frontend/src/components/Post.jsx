@@ -1,8 +1,9 @@
 import React from "react";
+import Reply from "./Reply.jsx";
 // import { ReactComponent as VerifiedSvg } from '../assets/verified.svg';
 import "./Post.css";
 
-function Post({author, content, createdAt, reactions, onDelete, isOfficial}) {
+function Post({author, content, createdAt, reactions, replies, onDelete, isOfficial, getReplies}) {
   const formatDate = (iso) => {
     const d = new Date(iso);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -21,8 +22,15 @@ function Post({author, content, createdAt, reactions, onDelete, isOfficial}) {
           {content}
         </p>
         <p className="post-meta">
-          {reactions /* will format later */}  {formatDate(createdAt)}
+          <button className='replies-btn' onSubmit={getReplies}>Replies</button>{reactions /* will format later */}  {formatDate(createdAt)}
         </p>
+        <section className='reply-container'>
+          {
+            replies.map(reply => {
+              <Reply key={reply.id} author={reply.author} content={reply.content} createdAt={reply.createdAt} /> // add onDelete attribute with deletion function
+            })
+          }
+        </section>
       </div>
   );
 }
