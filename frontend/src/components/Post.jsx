@@ -1,9 +1,13 @@
-import React from "react";
+import { React, useState } from "react";
 import Reply from "./Reply.jsx";
+import CreateReplyForm from "./CreateReplyForm.jsx";
 // import { ReactComponent as VerifiedSvg } from '../assets/verified.svg';
 import "./Post.css";
 
 function Post({author, content, createdAt, reactions, replies, onDelete, isOfficial, getReplies}) {
+  const [postReplies, setPostReplies] = useState(replies ? replies : []);
+  const [showForm, setShowForm] = useState(false);
+
   const formatDate = (iso) => {
     const d = new Date(iso);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -22,15 +26,18 @@ function Post({author, content, createdAt, reactions, replies, onDelete, isOffic
           {content}
         </p>
         <p className="post-meta">
-          <button className='replies-btn' onSubmit={getReplies}>Replies</button>{reactions /* will format later */}  {formatDate(createdAt)}
+          <button className='replies-btn' onSubmit={() => {console.log('replies button clicked'); setShowForm(s => !s)}}>Replies</button>{reactions /* will format later */}  {formatDate(createdAt)}
         </p>
-        <section className='reply-container'>
+        {showForm && (<section className='reply-container'>
+          <CreateReplyForm />
           {
-            replies.map(reply => {
+            postReplies.map(reply => {
               <Reply key={reply.id} author={reply.author} content={reply.content} createdAt={reply.createdAt} /> // add onDelete attribute with deletion function
             })
           }
         </section>
+        )}
+        
       </div>
   );
 }

@@ -90,6 +90,21 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
     }
   }
 
+  const getReplies = async(postId) => {
+    try {
+      const response = await fetch(`${baseUrl}/posts/${postId}/replies`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `bearer ${currentUser.token}`
+        }
+      })
+      console.log(response);
+    } catch(e) {
+      throw new Error(`Error getting post ${postId} replies.`);
+    }
+  }
+
   // Get current posts
   useEffect(() => {
     getPosts();
@@ -122,7 +137,7 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
       <section className="community-posts">
         {
           posts.map(post => (
-            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} currentUser={currentUser.token}/>
+            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} replies={() => getReplies(post.id)} />
           ))
         }
       </section>
