@@ -27,7 +27,7 @@ function Dashboard() {
         } else if(currentMenuItem === 'community-board') {
             setCurrentComponent(<CommunityBoard user={currentUser}/>);
         } else if(currentMenuItem === 'petitions') {
-            setCurrentComponent(<PetitionsPage/>);
+            setCurrentComponent(<PetitionsPage user={currentUser}/>);
         } else if(currentMenuItem === 'calendar') {
             setCurrentComponent(<CalendarPage/>);
         }

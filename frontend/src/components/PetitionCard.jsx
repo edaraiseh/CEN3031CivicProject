@@ -9,7 +9,7 @@ function formatDate(iso) {
 }
 
 export default function PetitionCard({ petition, onSign }) {
-  const { title, description, createdAt, signatures } = petition;
+  const { title, content, createdAt, signatureCount } = petition;
 
   return (
     <article>
@@ -18,12 +18,12 @@ export default function PetitionCard({ petition, onSign }) {
         <div className="card-meta">{formatDate(createdAt)}</div>
       </div>
 
-      <p className="card-body">{description}</p>
+      <p className="card-body">{content}</p>
 
       <div className="card-foot">
         <button className="btn btn-accent" onClick={onSign}>Sign This Petition</button>
         <span className="pill">
-          {signatures} {signatures === 1 ? "signature" : "signatures"}
+          {signatureCount} {signatureCount === 1 ? "signature" : "signatures"}
         </span>
       </div>
     </article>
