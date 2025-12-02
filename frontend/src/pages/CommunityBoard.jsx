@@ -10,8 +10,8 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState('recent'); // 'asc' | 'desc'
   const [showForm, setShowForm] = useState(false);
-  const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
-
+  
+const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
   const getPosts = async() => {  // if getting all posts, put null for searchTerm. Otherwise this function also doubles as a searching function
     console.log('shh...getPosts is starting');
     try {
@@ -90,6 +90,34 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
     }
   }
 
+  const getAllReplies = async() => {
+    posts.forEach(post => {
+      getReplies(post);
+    }); 
+  }
+
+  useEffect(() => {
+    getAllReplies();
+    console.log(posts);
+  }, [posts]);
+
+  const getReplies = async(post) => {
+    try {
+      const response = await fetch(`${baseUrl}/posts/${post.id}/replies`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `bearer ${currentUser.token}`
+        }
+      })
+      const data = await response.json();
+      post.replies = data;
+      console.log(data);
+    } catch(e) {
+      throw new Error(`Error getting post ${postId} replies.`);
+    }
+  }
+
   // Get current posts
   useEffect(() => {
     getPosts();
@@ -122,7 +150,7 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
       <section className="community-posts">
         {
           posts.map(post => (
-            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} currentUser={currentUser.token}/>
+            <Post key={post.id} id={post.id} userToken={currentUser.token} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} replies={post.replies} onDelete={() => deletePost(post.id)} />
           ))
         }
       </section>
