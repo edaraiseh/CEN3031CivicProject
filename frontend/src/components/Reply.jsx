@@ -16,7 +16,7 @@ function Reply({author, content, createdAt, onDelete}) {
   return(
       <div className="reply-card">
         <h2>{author}</h2>
-        <button className="delete-btn" onSubmit={onDelete}>Delete</button>
+        <button className="delete-btn" onClick={onDelete}>Delete</button>
         <p>
           {content}
         </p>

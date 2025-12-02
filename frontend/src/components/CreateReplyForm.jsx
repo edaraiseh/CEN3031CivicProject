@@ -23,7 +23,7 @@ function CreateReplyForm({ onSubmit }) {
       </label>
 
       <div className="form-actions">
-        <button type="submit" className="btn btn-accent">Create</button>
+        <button type="submit" className="btn btn-accent">Send reply</button>
       </div>
     </form>
   );

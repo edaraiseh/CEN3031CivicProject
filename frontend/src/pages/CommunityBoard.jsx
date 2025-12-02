@@ -90,16 +90,24 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
     }
   }
 
-  const getReplies = async(postId) => {
+  const getAllReplies = async() => {
+    posts.forEach(post => {
+      getReplies(post);
+    }); 
+  }
+
+  const getReplies = async(post) => {
     try {
-      const response = await fetch(`${baseUrl}/posts/${postId}/replies`, {
+      const response = await fetch(`${baseUrl}/posts/${post.id}/replies`, {
         method: 'GET',
         headers: {
           'content-type': 'application/json',
           'Authorization': `bearer ${currentUser.token}`
         }
       })
-      console.log(response);
+      const data = await response.json();
+      post.replies = data;
+      console.log(data);
     } catch(e) {
       throw new Error(`Error getting post ${postId} replies.`);
     }
@@ -137,7 +145,7 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
       <section className="community-posts">
         {
           posts.map(post => (
-            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} replies={() => getReplies(post.id)} />
+            <Post key={post.id} id={post.id} userToken={currentUser.token} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} replies={post.replies} onDelete={() => deletePost(post.id)} />
           ))
         }
       </section>

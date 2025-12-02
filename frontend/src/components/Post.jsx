@@ -4,9 +4,10 @@ import CreateReplyForm from "./CreateReplyForm.jsx";
 // import { ReactComponent as VerifiedSvg } from '../assets/verified.svg';
 import "./Post.css";
 
-function Post({author, content, createdAt, reactions, replies, onDelete, isOfficial, getReplies}) {
+function Post({id, userToken, author, content, createdAt, reactions, onDelete, replies, isOfficial}) {
   const [postReplies, setPostReplies] = useState(replies ? replies : []);
   const [showForm, setShowForm] = useState(false);
+  const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
 
   const formatDate = (iso) => {
     const d = new Date(iso);
@@ -18,18 +19,39 @@ function Post({author, content, createdAt, reactions, replies, onDelete, isOffic
     return `${mm}/${dd}/${yy} ${hh}:${mi}`;
   }
 
+  const submitReply = async(content) => {
+    console.log(userToken);
+    try {
+      const response = await fetch(`${baseUrl}/posts/${id}/replies`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `bearer ${userToken}`
+        },
+        body: {
+          'content': content
+        }
+      })
+    } catch(e) {
+      console.error(`Error adding reply to post ${id}: ${e}`);
+    }
+  }
+
+  console.log(replies);
+  console.log(postReplies);
+
   return(
       <div className="post-card">
         <h2>{author}</h2>
-        <button className="delete-btn" onSubmit={onDelete}>Delete</button>
+        <button className="delete-btn" onClick={onDelete}>Delete</button>
         <p>
           {content}
         </p>
         <p className="post-meta">
-          <button className='replies-btn' onSubmit={() => {console.log('replies button clicked'); setShowForm(s => !s)}}>Replies</button>{reactions /* will format later */}  {formatDate(createdAt)}
+          <button className='replies-btn' onClick={() => setShowForm(s => !s)}>Replies</button>{reactions /* will format later */}  {formatDate(createdAt)}
         </p>
         {showForm && (<section className='reply-container'>
-          <CreateReplyForm />
+          <CreateReplyForm onSubmit={submitReply}/>
           {
             postReplies.map(reply => {
               <Reply key={reply.id} author={reply.author} content={reply.content} createdAt={reply.createdAt} /> // add onDelete attribute with deletion function
