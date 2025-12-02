@@ -56,25 +56,9 @@ function Announcements({ user }) {
       }
     };
   
-    const getCurrentUserName = async() => {
-      try {
-        const response = await fetch(`${baseUrl}/users/${user.userId}`, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json'
-          }
-        })
-        setCurrentUserName(response.json().username);
-        console.log(currentUserName);
-        console.log(`response is ${response}`);
-      } catch(e) {
-        throw new Error('Error getting current username');
-      }
-    }
-  
     const deleteAnnouncement = async(postId) => {
       try {
-        const response = await fetch(`${baseUrl}/posts/official/${postId}`, {
+        const response = await fetch(`${baseUrl}/posts/${postId}`, {
           method: 'DELETE',
           headers: {
             'content-type': 'application/json',
@@ -89,11 +73,39 @@ function Announcements({ user }) {
         getAnnouncements();
       }
     }
-  
+
+    const getAllReplies = async() => {
+      announcements.forEach(post => {
+        getReplies(post);
+      }); 
+    }
+
+    const getReplies = async(post) => {
+      try {
+        const response = await fetch(`${baseUrl}/posts/${post.id}/replies`, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `bearer ${currentUser.token}`
+          }
+        })
+        const data = await response.json();
+        post.replies = data;
+        console.log(data);
+      } catch(e) {
+        throw new Error(`Error getting post ${postId} replies.`);
+      }
+    }
+    
     // Get current posts
     useEffect(() => {
       getAnnouncements();
     }, [sortBy]);
+
+    useEffect(() => {
+        getAllReplies();
+        console.log(announcements);
+    }, [announcements]);
   
     // Get current user's username
     // useEffect(() => {
@@ -122,7 +134,7 @@ function Announcements({ user }) {
       <section className="announcements-list">
         {
           announcements.map(post => (
-            <Post key={post.id} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} onDelete={() => deletePost(post.id)} currentUser={currentUser.token}/>
+            <Post key={post.id} id={post.id} userToken={currentUser.token} author={post.author} content={post.content} createdAt={post.createdAt} reactions={post.reactions} replies={post.replies} onDelete={() => deleteAnnouncement(post.id)} isOfficial={true} />
           ))
         }
       </section>

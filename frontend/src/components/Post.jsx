@@ -34,6 +34,9 @@ function Post({id, userToken, author, content, createdAt, reactions, onDelete, r
           'content': content
         }
       })
+      if(!response.ok) {
+        throw new Error(`Error adding reply to post ${id}`);
+      }
     } catch(e) {
       console.error(`Error adding reply to post ${id}: ${e}`);
     }
