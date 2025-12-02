@@ -21,6 +21,8 @@ function Post({id, userToken, author, content, createdAt, reactions, onDelete, r
 
   const submitReply = async(content) => {
     console.log(userToken);
+    console.log(content);
+    console.log(typeof(content));
     try {
       const response = await fetch(`${baseUrl}/posts/${id}/replies`, {
         method: 'PUT',

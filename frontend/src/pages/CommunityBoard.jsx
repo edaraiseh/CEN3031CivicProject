@@ -10,8 +10,8 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState('recent'); // 'asc' | 'desc'
   const [showForm, setShowForm] = useState(false);
-  const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
-
+  
+const [baseUrl, setBaseUrl] = useState(import.meta.env.VITE_API_BASE_URL);
   const getPosts = async() => {  // if getting all posts, put null for searchTerm. Otherwise this function also doubles as a searching function
     console.log('shh...getPosts is starting');
     try {
@@ -95,6 +95,11 @@ function CommunityBoard({ user }) { // user is passed in as a JSON object, no ne
       getReplies(post);
     }); 
   }
+
+  useEffect(() => {
+    getAllReplies();
+    console.log(posts);
+  }, [posts]);
 
   const getReplies = async(post) => {
     try {
